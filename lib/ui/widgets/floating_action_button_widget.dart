@@ -18,15 +18,17 @@ class FloatingActionButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void validateAndInsert() {
+    void insertDataToDatabase() {
+      cubit.insertToDatabase(
+        title: cubit.titleController.text,
+        date: cubit.dateController.text,
+        time: cubit.timeController.text,
+      );
+    }
+
+    void validate() {
       if (formKey.currentState!.validate()) {
-        cubit.insertToDatabase(
-          title: cubit.titleController.text,
-          date: cubit.dateController.text,
-          time: cubit.timeController.text,
-        );
-        Navigator.pop(context);
-        cubit.isBottomSheetShow = false;
+        insertDataToDatabase();
       }
     }
 
@@ -124,9 +126,8 @@ class FloatingActionButtonWidget extends StatelessWidget {
     return FloatingActionButton(
       child: Icon(cubit.iconFloatingActionBottom),
       onPressed: () {
-        print('----------------------------${cubit.titleController.text}');
         if (cubit.isBottomSheetShow) {
-          validateAndInsert();
+          validate();
         } else {
           scaffoldKey.currentState
               ?.showBottomSheet(

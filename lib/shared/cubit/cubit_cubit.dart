@@ -15,6 +15,7 @@ class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialState());
   static AppCubit getObjectFromCubit(BuildContext context) =>
       BlocProvider.of<AppCubit>(context);
+  // * variabls text field
   TextEditingController titleController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   TextEditingController dateController = TextEditingController();
@@ -41,7 +42,7 @@ class AppCubit extends Cubit<AppStates> {
   Database? database;
   String tableName = 'tasks';
   int version = 1;
-  List<Map> tasksFromDatabase = [];
+  List tasksFromDatabase = [];
 
   void createDatabase() async {
     try {
@@ -55,6 +56,11 @@ class AppCubit extends Cubit<AppStates> {
               'CREATE TABLE $tableName (id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT, status TEXT)');
         },
         onOpen: (Database database) {
+          getDataFromDatabase(database).then((value) {
+            tasksFromDatabase = value;
+            print(tasksFromDatabase);
+            emit(AppGetDatabaseState());
+          });
           print('Database Open');
         },
       ).then((value) {
@@ -81,7 +87,9 @@ class AppCubit extends Cubit<AppStates> {
         emit(AppInsertDatabaseState());
         getDataFromDatabase(database!).then((value) {
           tasksFromDatabase = value;
+          emit(AppGetDatabaseState());
         });
+        print(tasksFromDatabase);
       }).catchError((error) {
         print('Error when insert data ${error.toString()}');
       });
@@ -89,6 +97,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future<List<Map>> getDataFromDatabase(Database database) async {
+    emit(AppGetDatabaseLoadingState());
     return await database.rawQuery('SELECT * FROM $tableName');
   }
 

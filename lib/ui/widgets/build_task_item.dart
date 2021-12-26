@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class BuildTaskItem extends StatelessWidget {
+  final List tasks;
   final int index;
-  const BuildTaskItem(this.index, {Key? key}) : super(key: key);
+  const BuildTaskItem(this.tasks, this.index, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,30 +11,26 @@ class BuildTaskItem extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 40.0,
-            child: Text(''
-                // '${DatabaseServices.tasksFromDatabase![index]['time']}',
-                ),
+            child: Text('${tasks[index]['time']}'),
           ),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
-                '',
-                // '${DatabaseServices.tasksFromDatabase![index]['title']}',
+                '${tasks[index]['title']}',
                 textAlign: TextAlign.start,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                '',
-                // '${DatabaseServices.tasksFromDatabase![index]['date']}',
+                '${tasks[index]['date']}',
                 textAlign: TextAlign.start,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.grey,
                 ),
               ),
