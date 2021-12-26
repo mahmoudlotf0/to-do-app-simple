@@ -101,11 +101,13 @@ class AppCubit extends Cubit<AppStates> {
     return await database.rawQuery('SELECT * FROM $tableName');
   }
 
-  void updateDataFromDatabase() async {
-    await database!.rawUpdate(
-      'UPDATE $tableName SET name = ?, value = ? WHERE name = ?',
-      ['updated name', '9876', 'some name'],
-    );
+  void updateDataFromDatabase({required String status, required int id}) async {
+    database!.rawUpdate(
+      'UPDATE $tableName SET status = ? WHERE id = ?',
+      [status, id],
+    ).then((value) {
+      emit(AppUbdateDatabaseState());
+    });
   }
 
   // * Bottom Sheet
