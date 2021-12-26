@@ -19,6 +19,11 @@ class AppCubit extends Cubit<AppStates> {
   TextEditingController titleController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  void clearCotroller() {
+    titleController.clear();
+    timeController.clear();
+    dateController.clear();
+  }
 
   // * Bottom Navigation Bar
   void bottomNavigationbar() {}
@@ -84,7 +89,8 @@ class AppCubit extends Cubit<AppStates> {
         print('$value Inserted Successfully');
         emit(AppInsertDatabaseState());
         getDataFromDatabase(database!);
-        print(newTasksFromDatabase);
+        clearCotroller();
+        emit(AppClearControllerState());
       }).catchError((error) {
         print('Error when insert data ${error.toString()}');
       });
