@@ -16,8 +16,7 @@ class _TasksPageState extends State<TasksPage> {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (BuildContext context, AppStates state) {},
       builder: (BuildContext context, AppStates state) {
-        List tasks = AppCubit.getObjectFromCubit(context).tasksFromDatabase;
-
+        List tasks = AppCubit.getObjectFromCubit(context).newTasksFromDatabase;
         return ListView.separated(
           itemBuilder: (BuildContext context, int index) {
             return BuildTaskItem(tasks, index);
