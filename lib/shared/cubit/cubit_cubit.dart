@@ -42,7 +42,9 @@ class AppCubit extends Cubit<AppStates> {
   Database? database;
   String tableName = 'tasks';
   int version = 1;
-  List tasksFromDatabase = [];
+  List<Map> newTasksFromDatabase = [];
+  List<Map> doneTasksFromDatabase = [];
+  List<Map> archiveTasksFromDatabase = [];
 
   void createDatabase() async {
     try {
@@ -56,11 +58,7 @@ class AppCubit extends Cubit<AppStates> {
               'CREATE TABLE $tableName (id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT, status TEXT)');
         },
         onOpen: (Database database) {
-          getDataFromDatabase(database).then((value) {
-            tasksFromDatabase = value;
-            print(tasksFromDatabase);
-            emit(AppGetDatabaseState());
-          });
+          getDataFromDatabase(database);
           print('Database Open');
         },
       ).then((value) {
@@ -85,20 +83,31 @@ class AppCubit extends Cubit<AppStates> {
           .then((int value) {
         print('$value Inserted Successfully');
         emit(AppInsertDatabaseState());
-        getDataFromDatabase(database!).then((value) {
-          tasksFromDatabase = value;
-          emit(AppGetDatabaseState());
-        });
-        print(tasksFromDatabase);
+        getDataFromDatabase(database!);
+        print(newTasksFromDatabase);
       }).catchError((error) {
         print('Error when insert data ${error.toString()}');
       });
     });
   }
 
-  Future<List<Map>> getDataFromDatabase(Database database) async {
+  void getDataFromDatabase(Database database) {
+    newTasksFromDatabase = [];
+    doneTasksFromDatabase = [];
+    archiveTasksFromDatabase = [];
     emit(AppGetDatabaseLoadingState());
-    return await database.rawQuery('SELECT * FROM $tableName');
+    database.rawQuery('SELECT * FROM $tableName').then((value) {
+      for (Map element in value) {
+        if (element['status'] == 'new') {
+          newTasksFromDatabase.add(element);
+        } else if (element['status'] == 'done') {
+          doneTasksFromDatabase.add(element);
+        } else {
+          archiveTasksFromDatabase.add(element);
+        }
+      }
+      emit(AppGetDatabaseState());
+    });
   }
 
   void updateDataFromDatabase({required String status, required int id}) async {
@@ -106,6 +115,7 @@ class AppCubit extends Cubit<AppStates> {
       'UPDATE $tableName SET status = ? WHERE id = ?',
       [status, id],
     ).then((value) {
+      getDataFromDatabase(database!);
       emit(AppUbdateDatabaseState());
     });
   }
