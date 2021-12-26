@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo/ui/widgets/defualt_form_field.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/shared/cubit/cubit_cubit.dart';
+import 'package:todo/ui/widgets/build_task_item.dart';
 
 class DonePage extends StatefulWidget {
   const DonePage({Key? key}) : super(key: key);
@@ -13,30 +15,24 @@ class _DonePageState extends State<DonePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DefualtFormField(
-          prefixIcon: Icons.ac_unit,
-          hintText: '',
-          label: const Text(''),
-          controller: controller,
-        ),
-        ElevatedButton(
-            onPressed: () {
-              print('---------------- ${controller.text}');
-            },
-            child: const Text('Tap'))
-      ],
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (BuildContext context, AppStates state) {},
+      builder: (BuildContext context, AppStates state) {
+        List tasks = AppCubit.getObjectFromCubit(context).doneTasksFromDatabase;
+        return ListView.separated(
+          itemBuilder: (BuildContext context, int index) {
+            return BuildTaskItem(tasks, index);
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return Container(
+              width: double.infinity,
+              height: 1,
+              color: Colors.grey[300],
+            );
+          },
+          itemCount: tasks.length,
+        );
+      },
     );
-
-    // return const Center(
-    //   child: Text(
-    //     'Done',
-    //     style: TextStyle(
-    //       fontSize: 25.0,
-    //       fontWeight: FontWeight.bold,
-    //     ),
-    //   ),
-    // );
   }
 }
