@@ -49,6 +49,16 @@ class BuildTaskItem extends StatelessWidget {
               Icons.check_box,
               color: Colors.green,
             ),
+          ),
+          IconButton(
+            onPressed: () {
+              AppCubit.getObjectFromCubit(context).updateDataFromDatabase(
+                  status: 'archive', id: tasks[index]['id']);
+            },
+            icon: const Icon(
+              Icons.archive,
+              color: Colors.black45,
+            ),
           )
         ],
       ),
