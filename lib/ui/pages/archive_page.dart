@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/shared/cubit/cubit_cubit.dart';
+import 'package:todo/ui/widgets/build_task_item.dart';
 
 class ArchivePage extends StatefulWidget {
   const ArchivePage({Key? key}) : super(key: key);
@@ -10,14 +13,25 @@ class ArchivePage extends StatefulWidget {
 class _ArchivePageState extends State<ArchivePage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Archive',
-        style: TextStyle(
-          fontSize: 25.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (BuildContext context, AppStates state) {},
+      builder: (BuildContext context, AppStates state) {
+        List tasks =
+            AppCubit.getObjectFromCubit(context).archiveTasksFromDatabase;
+        return ListView.separated(
+          itemBuilder: (BuildContext context, int index) {
+            return BuildTaskItem(tasks, index);
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return Container(
+              width: double.infinity,
+              height: 1,
+              color: Colors.grey[300],
+            );
+          },
+          itemCount: tasks.length,
+        );
+      },
     );
   }
 }
