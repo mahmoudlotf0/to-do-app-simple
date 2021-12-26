@@ -101,6 +101,13 @@ class AppCubit extends Cubit<AppStates> {
     return await database.rawQuery('SELECT * FROM $tableName');
   }
 
+  void updateDataFromDatabase() async {
+    await database!.rawUpdate(
+      'UPDATE $tableName SET name = ?, value = ? WHERE name = ?',
+      ['updated name', '9876', 'some name'],
+    );
+  }
+
   // * Bottom Sheet
   IconData iconFloatingActionBottom = Icons.edit;
   bool isBottomSheetShow = false;
