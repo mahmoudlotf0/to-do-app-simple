@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/shared/cubit/cubit_cubit.dart';
 
 class BuildTaskItem extends StatelessWidget {
   final List tasks;
@@ -16,26 +17,39 @@ class BuildTaskItem extends StatelessWidget {
             child: Text('${tasks[index]['time']}'),
           ),
           const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${tasks[index]['title']}',
-                textAlign: TextAlign.start,
-                style: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${tasks[index]['title']}',
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                '${tasks[index]['date']}',
-                textAlign: TextAlign.start,
-                style: const TextStyle(
-                  color: Colors.grey,
+                Text(
+                  '${tasks[index]['date']}',
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+          const SizedBox(width: 10),
+          IconButton(
+            onPressed: () {
+              AppCubit.getObjectFromCubit(context).updateDataFromDatabase(
+                  status: 'done', id: tasks[index]['id']);
+            },
+            icon: const Icon(
+              Icons.check_box,
+              color: Colors.green,
+            ),
+          )
         ],
       ),
     );
