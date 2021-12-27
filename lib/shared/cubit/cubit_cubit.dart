@@ -126,6 +126,14 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  void deleteDataFromDatabase(int id) async {
+    await database!
+        .rawDelete('DELETE FROM $tableName WHERE id = ?', [id]).then((value) {
+      getDataFromDatabase(database!);
+    });
+    emit(AppDeleteDatabaseState());
+  }
+
   // * Bottom Sheet
   IconData iconFloatingActionBottom = Icons.edit;
   bool isBottomSheetShow = false;

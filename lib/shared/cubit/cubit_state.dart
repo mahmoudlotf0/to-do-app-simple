@@ -19,4 +19,6 @@ class AppGetDatabaseLoadingState extends AppStates {}
 
 class AppUbdateDatabaseState extends AppStates {}
 
+class AppDeleteDatabaseState extends AppStates {}
+
 class AppClearControllerState extends AppStates {}
